@@ -1,11 +1,12 @@
 import turtle
 
-cell_size = 400  # Size of each grid cell 20
-grid_rows = 4  # Number of rows 27
-grid_cols = 4  # Number of columns 41
+cell_size = 30  # Size of each grid cell 20
+grid_rows =11   # Number of rows 27
+grid_cols = 3  # Number of columns 41
 animate_limit = 10  # Number of squares to draw with animation
 grid_offset_x = -400  # Starting x position of the grid
-grid_offset_y = -400  # Starting y position of the grid
+grid_offset_y = -400  # Starting y position of the grida
+azure_spacing = 2
 
 def draw_square(size, offset_x=0, offset_y=0):
     """Draws a square with the given size at the specified offset."""
@@ -19,12 +20,107 @@ def draw_square(size, offset_x=0, offset_y=0):
 def draw_bouncy_diagonals(cell_size=20, grid_offset_x=0, grid_offset_y=0):
     """Uses the draw_diagonal_ lines method until it bounces and then changes direction."""
     x, y = grid_offset_x, grid_offset_y
+    direction_x = 1
+    direction_y = 1
 
-    while x < grid_offset_x + grid_cols * cell_size and y < grid_offset_y + grid_rows * cell_size:
-        x, y = draw_diagonal_lines_2(cell_size, 4, x, y)
+    #while x < grid_offset_x + grid_cols * cell_size and y < grid_offset_y + grid_rows * cell_size:
+    while True:
+        if x >= grid_offset_x + grid_cols * cell_size:
+            print(f"change in x")
+            direction_x = -direction_x
+            x += -cell_size
+        elif x < grid_offset_x:
+            print(f"change in x")
+            direction_x = -direction_x
+            x += cell_size
+        if y >= grid_offset_y + grid_rows * cell_size:
+            print(f"change in y")
+            direction_y = -direction_y
+            y += -cell_size
+        elif y < grid_offset_y:
+            print(f"change in y")
+            direction_y = -direction_y
+            y += cell_size
 
-def draw_diagonal_lines_2(size, spacing, offset_x=0, offset_y=0):
-    """Draws diagonal lines at the opposite 45-degree angle (\ direction) within a square."""
+        if direction_x == 1 and direction_y == 1:
+            turtle.color("red")
+            x, y = draw_diagonal_lines_11(cell_size, azure_spacing, x, y)
+        elif direction_x == 1 and direction_y == -1:
+            turtle.color("blue")
+            x, y = draw_diagonal_lines_10(cell_size, azure_spacing, x, y)
+        elif direction_x == -1 and direction_y == 1:
+            turtle.color("green")
+            x,y = draw_diagonal_lines_01(cell_size, azure_spacing, x, y)
+        elif direction_x == -1 and direction_y == -1:
+            turtle.color("black")
+            x, y = draw_diagonal_lines_00(cell_size, azure_spacing, x, y)
+
+def draw_diagonal_lines_00(size, spacing, offset_x=0, offset_y=0):
+    """Draws diagonal lines at a 45-degree angle within a square."""
+    for i in range(size // spacing + 1):
+        # Draw lines parallel to one diagonal
+        start_x = offset_x + i * spacing
+        start_y = offset_y
+        end_x = offset_x + size
+        end_y = offset_y + size - i * spacing
+
+        if start_x <= offset_x + size and end_y <= offset_y + size:
+            turtle.penup()
+            turtle.goto(start_x, start_y)
+            turtle.pendown()
+            turtle.goto(end_x, end_y)
+
+    for i in range(1, size // spacing + 1):
+        # Draw lines parallel to the other diagonal
+        start_x = offset_x
+        start_y = offset_y + i * spacing
+        end_x = offset_x + size - i * spacing
+        end_y = offset_y + size
+
+        if start_y <= offset_y + size and end_x <= offset_x + size:
+            turtle.penup()
+            turtle.goto(start_x, start_y)
+            turtle.pendown()
+            turtle.goto(end_x, end_y)
+
+    current_x = offset_x - size
+    current_y = offset_y - size
+    return current_x, current_y
+
+def draw_diagonal_lines_01(size, spacing, offset_x=0, offset_y=0):
+    """Draws diagonal lines at the opposite 45-degree angle  direction within a square."""
+    # First set of lines (from left edge to bottom edge)
+    for i in range(size // spacing + 1):
+        start_x = offset_x + cell_size - i * spacing
+        start_y = offset_y
+        end_x = offset_x + cell_size
+        end_y = offset_y + i * spacing
+
+        if start_x <= offset_x + size and end_y <= offset_y + size:
+            turtle.penup()
+            turtle.goto(start_x, start_y)
+            turtle.pendown()
+            turtle.goto(end_x, end_y)
+
+    # Second set of lines (from top edge to right edge)
+    for i in range(1, size // spacing + 1):
+        start_x = offset_x
+        start_y = offset_y + i * spacing
+        end_x = offset_x + size - i * spacing
+        end_y = offset_y + size
+
+        if start_x >= offset_x and end_y <= offset_y + size:
+            turtle.penup()
+            turtle.goto(start_x, start_y)
+            turtle.pendown()
+            turtle.goto(end_x, end_y)
+
+    current_x = offset_x - size
+    current_y = offset_y + size
+    return current_x, current_y
+
+def draw_diagonal_lines_10(size, spacing, offset_x=0, offset_y=0):
+    """Draws diagonal lines at the opposite 45-degree angle  direction within a square."""
     # First set of lines (from left edge to bottom edge)
     for i in range(size // spacing + 1):
         start_x = offset_x + i * spacing
@@ -52,11 +148,11 @@ def draw_diagonal_lines_2(size, spacing, offset_x=0, offset_y=0):
             turtle.goto(end_x, end_y)
 
     current_x = offset_x + size
-    current_y = offset_y + size
+    current_y = offset_y - size
     return current_x, current_y
 
 
-def draw_diagonal_lines_1(size, spacing, offset_x=0, offset_y=0):
+def draw_diagonal_lines_11(size, spacing, offset_x=0, offset_y=0):
     """Draws diagonal lines at a 45-degree angle within a square."""
     for i in range(size // spacing + 1):
         # Draw lines parallel to one diagonal
