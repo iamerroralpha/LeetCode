@@ -59,9 +59,9 @@ def draw_diagonal_lines_00(size, spacing, offset_x=0, offset_y=0):
     """Draws diagonal lines at a 45-degree angle within a square."""
     for i in range(size // spacing + 1):
         # Draw lines parallel to one diagonal
-        start_x = offset_x + i * spacing
-        start_y = offset_y
-        end_x = offset_x + size
+        start_x = offset_x + cell_size - i * spacing
+        start_y = offset_y + cell_size
+        end_x = offset_x + cell_size
         end_y = offset_y + size - i * spacing
 
         if start_x <= offset_x + size and end_y <= offset_y + size:
@@ -73,9 +73,9 @@ def draw_diagonal_lines_00(size, spacing, offset_x=0, offset_y=0):
     for i in range(1, size // spacing + 1):
         # Draw lines parallel to the other diagonal
         start_x = offset_x
-        start_y = offset_y + i * spacing
+        start_y = offset_y + cell_size - i * spacing
         end_x = offset_x + size - i * spacing
-        end_y = offset_y + size
+        end_y = offset_y
 
         if start_y <= offset_y + size and end_x <= offset_x + size:
             turtle.penup()
