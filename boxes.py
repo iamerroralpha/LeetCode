@@ -1,8 +1,8 @@
 import turtle
 
-cell_size = 20  # Size of each grid cell
-grid_rows = 27  # Number of rows
-grid_cols = 41  # Number of columns
+cell_size = 400  # Size of each grid cell 20
+grid_rows = 4  # Number of rows 27
+grid_cols = 4  # Number of columns 41
 animate_limit = 10  # Number of squares to draw with animation
 grid_offset_x = -400  # Starting x position of the grid
 grid_offset_y = -400  # Starting y position of the grid
@@ -18,16 +18,45 @@ def draw_square(size, offset_x=0, offset_y=0):
 
 def draw_bouncy_diagonals(cell_size=20, grid_offset_x=0, grid_offset_y=0):
     """Uses the draw_diagonal_ lines method until it bounces and then changes direction."""
-    next_x, next_y = grid_offset_x, grid_offset_y
-    turtle.color("blue")
-    x, y = draw_diagonal_lines(cell_size, 4, next_x, next_y)
-    turtle.color("red")
-    x, y = draw_diagonal_lines(cell_size, 4, x, y)
+    x, y = grid_offset_x, grid_offset_y
 
     while x < grid_offset_x + grid_cols * cell_size and y < grid_offset_y + grid_rows * cell_size:
-        x, y = draw_diagonal_lines(cell_size, 4, x, y)
+        x, y = draw_diagonal_lines_2(cell_size, 4, x, y)
 
-def draw_diagonal_lines(size, spacing, offset_x=0, offset_y=0):
+def draw_diagonal_lines_2(size, spacing, offset_x=0, offset_y=0):
+    """Draws diagonal lines at the opposite 45-degree angle  within a square."""
+    for i in range(size // spacing + 1):
+        # Draw lines parallel to one diagonal
+        start_x = offset_x + i * spacing
+        start_y = offset_y + size
+        end_x = offset_x
+        end_y = offset_y + size - i * spacing
+
+        if i * spacing <= size:
+            turtle.penup()
+            turtle.goto(start_x, start_y)
+            turtle.pendown()
+            turtle.goto(end_x, end_y)
+
+    for i in range(1, size // spacing + 1):
+        # Draw lines parallel to the other diagonal
+        start_x = offset_x + i * spacing
+        start_y = offset_y
+        end_x = offset_x + size
+        end_y = offset_y + i * spacing
+
+        if i * spacing <= size:
+            turtle.penup()
+            turtle.goto(start_x, start_y)
+            turtle.pendown()
+            turtle.goto(end_x, end_y)
+
+    current_x = offset_x + size
+    current_y = offset_y + size
+    return current_x, current_y
+
+
+def draw_diagonal_lines_1(size, spacing, offset_x=0, offset_y=0):
     """Draws diagonal lines at a 45-degree angle within a square."""
     for i in range(size // spacing + 1):
         # Draw lines parallel to one diagonal
@@ -80,7 +109,7 @@ def draw_grid(rows, cols, cell_size, animate_limit=None, grid_offset_x=0, grid_o
 # Main script setup
 def main():
     turtle.screensize(canvwidth=1000, canvheight=1000)
-    turtle.speed(6)  # Moderate animation speed for the first few squares
+    turtle.speed(600)  # Moderate animation speed for the first few squares
 
     turtle.tracer(0, 0)  # Disable animation for fast rendering
     # Draw the grid
