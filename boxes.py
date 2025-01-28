@@ -1,12 +1,42 @@
 import turtle
+import os
+from PIL import Image
 
-cell_size = 30  # Size of each grid cell 20
-grid_rows =4   # Number of rows 27
-grid_cols = 3  # Number of columns 41
+cell_size = 20  # Size of each grid cell 20
+grid_rows =27   # Number of rows 27
+grid_cols = 41  # Number of columns 41
 animate_limit = 10  # Number of squares to draw with animation
 grid_offset_x = -400  # Starting x position of the grid
-grid_offset_y = -400  # Starting y position of the grida
-azure_spacing = 2
+grid_offset_y = -200  # Starting y position of the grida
+azure_spacing = 4
+save_interval = 10  # Save every n-th frame
+trace = False
+
+def save_frame(filename_prefix="frame", frame_count = 0):
+    """Saves the current turtle canvas as an image."""
+    canvas = turtle.getcanvas()
+    base_folder = os.getcwd()
+    folder_path_eps = os.path.join(base_folder, "images_eps")
+    folder_path_png = os.path.join(base_folder, "images_png")
+    os.makedirs(folder_path_eps, exist_ok=True)
+    os.makedirs(folder_path_png, exist_ok=True)
+
+    # Define file paths
+    eps_file = os.path.join(folder_path_eps, f"{filename_prefix}_{frame_count:04d}.eps")
+    png_file = os.path.join(folder_path_png, f"{filename_prefix}_{frame_count:04d}.png")
+    
+    # Save EPS and PNG
+    canvas = turtle.getcanvas()
+    canvas.postscript(file=eps_file)  # Save as EPS
+    img = Image.open(eps_file)
+
+    desired_width = 1920
+    desired_height = 1080
+    
+    # Scale image to the desired size
+    img = img.convert("RGBA")  # Ensure it's in RGBA mode for transparency support
+    img = img.resize((desired_width, desired_height))
+    img.save(png_file)  # Save as PNG
 
 def draw_square(size, offset_x=0, offset_y=0):
     """Draws a square with the given size at the specified offset."""
@@ -19,12 +49,19 @@ def draw_square(size, offset_x=0, offset_y=0):
 
 def draw_bouncy_diagonals(cell_size=20, grid_offset_x=0, grid_offset_y=0):
     """Uses the draw_diagonal_ lines method until it bounces and then changes direction."""
+
     x, y = grid_offset_x, grid_offset_y
     direction_x = 1
     direction_y = 1
 
+    epochs = 0
+
     #while x < grid_offset_x + grid_cols * cell_size and y < grid_offset_y + grid_rows * cell_size:
-    while True:
+    while epochs <= grid_rows * grid_cols:
+        epochs += 1
+        if epochs % save_interval == 0 or epochs == grid_rows * grid_cols + 1:
+            save_frame(filename_prefix="frame", frame_count=epochs // save_interval)
+
         if x >= grid_offset_x + grid_cols * cell_size:
             print(f"change in x")
             direction_x = -direction_x
@@ -43,16 +80,12 @@ def draw_bouncy_diagonals(cell_size=20, grid_offset_x=0, grid_offset_y=0):
             y += cell_size
 
         if direction_x == 1 and direction_y == 1:
-            turtle.color("red")
             x, y = draw_diagonal_lines_11(cell_size, azure_spacing, x, y)
         elif direction_x == 1 and direction_y == -1:
-            turtle.color("blue")
             x, y = draw_diagonal_lines_10(cell_size, azure_spacing, x, y)
         elif direction_x == -1 and direction_y == 1:
-            turtle.color("green")
             x,y = draw_diagonal_lines_01(cell_size, azure_spacing, x, y)
         elif direction_x == -1 and direction_y == -1:
-            turtle.color("black")
             x, y = draw_diagonal_lines_00(cell_size, azure_spacing, x, y)
 
 def draw_diagonal_lines_00(size, spacing, offset_x=0, offset_y=0):
@@ -205,14 +238,15 @@ def draw_grid(rows, cols, cell_size, animate_limit=None, grid_offset_x=0, grid_o
 # Main script setup
 def main():
     turtle.screensize(canvwidth=1000, canvheight=1000)
-    turtle.speed(600)  # Moderate animation speed for the first few squares
+    turtle.speed(0)  # Moderate animation speed for the first few squares
 
-    turtle.tracer(0, 0)  # Disable animation for fast rendering
-    # Draw the grid
-    turtle.color("black")
+    turtle.tracer(0, 0)  # Disable animation
+
     draw_grid(grid_rows, grid_cols, cell_size, animate_limit, grid_offset_x, grid_offset_y)
 
-    turtle.tracer(1, 0)  # Re-enable animation
+    if trace:
+       turtle.tracer(1, 0)  # Re-enable animation
+
     # Draw diagonal lines in the first cell
     draw_bouncy_diagonals(cell_size=cell_size, grid_offset_x=grid_offset_x, grid_offset_y=grid_offset_y)
     # Finish drawing
