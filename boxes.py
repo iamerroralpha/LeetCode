@@ -24,28 +24,29 @@ def draw_bouncy_diagonals(cell_size=20, grid_offset_x=0, grid_offset_y=0):
         x, y = draw_diagonal_lines_2(cell_size, 4, x, y)
 
 def draw_diagonal_lines_2(size, spacing, offset_x=0, offset_y=0):
-    """Draws diagonal lines at the opposite 45-degree angle  within a square."""
+    """Draws diagonal lines at the opposite 45-degree angle (\ direction) within a square."""
+    # First set of lines (from left edge to bottom edge)
     for i in range(size // spacing + 1):
-        # Draw lines parallel to one diagonal
         start_x = offset_x + i * spacing
         start_y = offset_y + size
         end_x = offset_x
         end_y = offset_y + size - i * spacing
 
-        if i * spacing <= size:
+        if start_x <= offset_x + size and end_y >= offset_y:
             turtle.penup()
             turtle.goto(start_x, start_y)
             turtle.pendown()
             turtle.goto(end_x, end_y)
 
+    turtle.color("blue")
+    # Second set of lines (from top edge to right edge)
     for i in range(1, size // spacing + 1):
-        # Draw lines parallel to the other diagonal
         start_x = offset_x + i * spacing
         start_y = offset_y
         end_x = offset_x + size
-        end_y = offset_y + i * spacing
+        end_y = offset_y + cell_size - i * spacing
 
-        if i * spacing <= size:
+        if end_x <= offset_x + size and end_y <= offset_y + size:
             turtle.penup()
             turtle.goto(start_x, start_y)
             turtle.pendown()
