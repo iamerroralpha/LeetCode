@@ -1,7 +1,7 @@
 import turtle
 
 cell_size = 30  # Size of each grid cell 20
-grid_rows =11   # Number of rows 27
+grid_rows =4   # Number of rows 27
 grid_cols = 3  # Number of columns 41
 animate_limit = 10  # Number of squares to draw with animation
 grid_offset_x = -400  # Starting x position of the grid
