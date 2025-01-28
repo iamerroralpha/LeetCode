@@ -1,3 +1,6 @@
+#Build using ffmpeg -framerate 10 -i frame_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p animation.mp4
+
+
 import turtle
 import os
 from PIL import Image
@@ -80,13 +83,17 @@ def draw_bouncy_diagonals(cell_size=20, grid_offset_x=0, grid_offset_y=0):
             y += cell_size
 
         if direction_x == 1 and direction_y == 1:
+            turtle.color("red")
             x, y = draw_diagonal_lines_11(cell_size, azure_spacing, x, y)
         elif direction_x == 1 and direction_y == -1:
             x, y = draw_diagonal_lines_10(cell_size, azure_spacing, x, y)
+            turtle.color("green")
         elif direction_x == -1 and direction_y == 1:
             x,y = draw_diagonal_lines_01(cell_size, azure_spacing, x, y)
+            turtle.color("blue")
         elif direction_x == -1 and direction_y == -1:
             x, y = draw_diagonal_lines_00(cell_size, azure_spacing, x, y)
+            turtle.color("black")
 
 def draw_diagonal_lines_00(size, spacing, offset_x=0, offset_y=0):
     """Draws diagonal lines at a 45-degree angle within a square."""
