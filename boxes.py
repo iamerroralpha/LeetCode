@@ -38,7 +38,6 @@ def draw_diagonal_lines_2(size, spacing, offset_x=0, offset_y=0):
             turtle.pendown()
             turtle.goto(end_x, end_y)
 
-    turtle.color("blue")
     # Second set of lines (from top edge to right edge)
     for i in range(1, size // spacing + 1):
         start_x = offset_x + i * spacing
